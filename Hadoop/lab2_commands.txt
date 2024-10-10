@@ -1,0 +1,25 @@
+https://medium.com/@guillermovc/setting-up-hadoop-with-docker-and-using-mapreduce-framework-c1cd125d4f7b
+
+cd "C:\Users\Artem\IdeaProjects\HadoopWithDocker\docker-hadoop"
+
+docker-compose up -d
+
+docker cp "C:\Users\Artem\Desktop\book\DON_QUIJOTE.txt" namenode:/tmp      - копіювати файл з локальної машини в контейнер namenode
+
+docker exec -it namenode bash                                              - зайти в контейнер namenode
+
+hdfs dfs -mkdir -p /user/root                                              - створює каталог input всередині /user/root
+
+hdfs dfs -mkdir /user/root/input                                           - Создаёт каталог input внутри /user/root
+  
+hdfs dfs -put /tmp/DON_QUIJOTE.txt /user/root/input                        - завантажити файл із контейнера в HDFS
+
+hdfs dfs -cat /user/root/input/DON_QUIJOTE.txt | head -n 10                - зчитування перших 10 рядків файлу
+
+hdfs dfs -ls /user/root/input                                              - переглянути вміст директорії
+
+hdfs dfs -ls -d /user/root/* /user/root/*/*                                - структури директорій
+
+hdfs dfs -touchz /user/root/input/empty_file.txt                           - створення порожнього файлу
+
+операції з файлами в hdfs: завантаження, створення, считування інформації, структура директорій, вміст директорій
