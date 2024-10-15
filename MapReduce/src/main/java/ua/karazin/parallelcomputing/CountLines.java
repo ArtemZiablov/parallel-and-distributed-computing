@@ -28,13 +28,13 @@ public class CountLines {
             System.out.println("Processing line: " + line);  // Виведення оброблюваної строки для дебагу
 
             // Якщо рядок містить певне ключове слово, записуємо його в контекст
-            if (line.contains("Attribute")) {
+            if (line.startsWith("A")) {
                 word.set("Attribute");
                 context.write(word, one);
-            } else if (line.contains("Case")) {
+            } else if (line.startsWith("C")) {
                 word.set("Case");
                 context.write(word, one);
-            } else if (line.contains("Vote")) {
+            } else if (line.startsWith("V")) {
                 word.set("Vote");
                 context.write(word, one);
             }

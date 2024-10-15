@@ -14,12 +14,14 @@ docker cp "D:\13\uni projects\parallel-computing\MapReduce\target\MapReduce-1.0-
 
 docker exec -it namenode /bin/bash
 
+hdfs dfs -rm -r /input
+
 hdfs dfs -mkdir /input
 
-hdfs dfs -put /home/hadoop/anonymous+microsoft+web+data /input/
+hdfs dfs -put /home/hadoop/anonymous-msweb.data /input/
 
 hdfs dfs -rm -r /output/result
 
-yarn jar /home/hadoop/MapReduce-1.0-SNAPSHOT.jar ua.karazin.parallelcomputing.CountLines /input/anonymous+microsoft+web+data /output/result
+yarn jar /home/hadoop/MapReduce-1.0-SNAPSHOT.jar ua.karazin.parallelcomputing.CountLines /input/anonymous-msweb.data /output/result
 
 hdfs dfs -cat /output/result/part-r-00000
