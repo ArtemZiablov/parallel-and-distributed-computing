@@ -13,21 +13,20 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
 
-
 public class CountLines {
 
-    // Клас для маппера, що перетворює вхідні рядки у пари ключ-значення.
+    // Mapper class that transforms input lines into key-value pairs.
     public static class LineMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
-        private final static IntWritable one = new IntWritable(1);  // Фіксоване значення 1 для кожного ключа
-        private Text word = new Text();  // Об'єкт для зберігання ключового слова
+        private final static IntWritable one = new IntWritable(1);  // Fixed value 1 for each key
+        private Text word = new Text();  // Object to store the key word
 
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-            // Перетворення вхідного значення в рядок
+            // Convert the input value to a string
             String line = value.toString();
-            System.out.println("Processing line: " + line);  // Виведення оброблюваної строки для дебагу
+            System.out.println("Processing line: " + line);  // Output the processed line for debugging
 
-            // Якщо рядок містить певне ключове слово, записуємо його в контекст
+            // If the line contains a specific keyword, write it to the context
             if (line.startsWith("A")) {
                 word.set("Attribute");
                 context.write(word, one);
@@ -41,31 +40,31 @@ public class CountLines {
         }
     }
 
-    // Клас для редюсера, що підсумовує значення для кожного ключа.
+    // Reducer class that sums the values for each key.
     public static class LineReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         @Override
         protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             int sum = 0;
-            // Підсумовуємо значення для кожного ключа
+            // Sum up the values for each key
             for (IntWritable val : values) {
                 sum += val.get();
             }
-            // Записуємо результат в контекст
+            // Write the result to the context
             context.write(key, new IntWritable(sum));
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Configuration conf = new Configuration();  // Налаштування Hadoop
-        Job job = Job.getInstance(conf, "Count Lines");  // Створення нового завдання
-        job.setJarByClass(CountLines.class);  // Вказуємо головний клас
-        job.setMapperClass(LineMapper.class);  // Вказуємо клас маппера
-        job.setCombinerClass(LineReducer.class);  // Використовуємо редюсер як комбінатор
-        job.setReducerClass(LineReducer.class);  // Вказуємо клас редюсера
-        job.setOutputKeyClass(Text.class);  // Ключем виходу буде текст
-        job.setOutputValueClass(IntWritable.class);  // Значенням виходу буде ціле число
-        FileInputFormat.addInputPath(job, new Path(args[0]));  // Вказуємо шлях до вхідних даних
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));  // Вказуємо шлях до вихідних даних
-        System.exit(job.waitForCompletion(true) ? 0 : 1);  // Запускаємо завдання і завершуємо програму
+        Configuration conf = new Configuration();  // Hadoop configuration
+        Job job = Job.getInstance(conf, "Count Lines");  // Create a new job instance
+        job.setJarByClass(CountLines.class);  // Set the main class
+        job.setMapperClass(LineMapper.class);  // Set the mapper class
+        job.setCombinerClass(LineReducer.class);  // Use the reducer as a combiner
+        job.setReducerClass(LineReducer.class);  // Set the reducer class
+        job.setOutputKeyClass(Text.class);  // The output key will be text
+        job.setOutputValueClass(IntWritable.class);  // The output value will be an integer
+        FileInputFormat.addInputPath(job, new Path(args[0]));  // Set the input data path
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));  // Set the output data path
+        System.exit(job.waitForCompletion(true) ? 0 : 1);  // Run the job and exit the program
     }
 }
