@@ -2,17 +2,15 @@ cd "C:\Users\Artem\IdeaProjects\HadoopWithDocker\docker-hadoop"
 
 docker-compose up -d
 
-docker exec -it namenode /bin/bash
+docker exec namenode mkdir -p /home/hadoop
 
-mkdir -p /home/hadoop
+docker cp "D:\datasets\anonymous+microsoft+web+data\anonymous-msweb.data" namenode:/home/hadoop/
 
-exit
-
-docker cp C:\Users\Artem\Desktop\anonymous+microsoft+web+data namenode:/home/hadoop/
-
-docker cp "D:\13\uni projects\parallel-computing\MapReduce\target\MapReduce-1.0-SNAPSHOT.jar" namenode:/home/hadoop/
+docker cp "D:\13\uni-projects\parallel-computing\MapReduce\target\MapReduce-1.0-SNAPSHOT.jar" namenode:/home/hadoop/
 
 docker exec -it namenode /bin/bash
+
+hdfs dfsadmin -safemode leave
 
 hdfs dfs -rm -r /input
 
